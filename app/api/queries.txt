@@ -1,0 +1,60 @@
+/v1/equipment/positions?functions=HAULING
+
+Get GPS positions of the equipment
+
+{
+  "updatesOnly": true,
+  "resultsTimeUtc": "string",
+  "results": [
+    {
+      "code": "string",
+      "description": "string",
+      "positions": [
+        {
+          "dateTimeUtc": "2023-05-07T09:26:36.764Z",
+          "x": 0,
+          "y": 0,
+          "z": 0,
+          "gpsFix": "string",
+          "positionSystem": "string",
+          "cumulativeDistance": 0,
+          "horizontalDilutionOfPrecision": 0,
+          "verticalDilutionOfPrecision": 0,
+          "isHdopAndVdopOk": true,
+          "visibleSatellites": 0,
+          "bearing": 0,
+          "isBearingValid": true,
+          "speed": 0,
+          "isSpeedValid": true
+        }
+      ]
+    }
+  ],
+  "fieldDescriptions": [
+    {
+      "propertyName": "string",
+      "description": "string"
+    }
+  ]
+}
+
+/v1/system/referencedata/activelists/{activelistOrGroupName}
+
+Get list of HAULING equipment
+
+{
+  "resultData": [
+    {
+      "code": "string",
+      "description": "string"
+    }
+  ],
+  "fieldDescriptions": [
+    {
+      "propertyName": "string",
+      "description": "string"
+    }
+  ],
+  "updatesOnly": true,
+  "resultsTime": "string"
+}
