@@ -33,6 +33,10 @@ def update_ui(win):
 
     #Add image to the Canvas Items
     canvas.create_image(0,0,anchor=NW,image=map)
+
+    btn = Button(canvas, text='No GPS',
+        bd='1', command=NoGPS)
+    btn.place(x=0, y=0) 
     
     # Get GPS positions of the trucks
     trucks_img = []
@@ -46,14 +50,13 @@ def update_ui(win):
 
         #canvas.delete("all")
         #Create a canvas and button
-        btn = Button(canvas, text='No GPS',
-                    bd='1', command=NoGPS)
+        
         for img in trucks_img:
             canvas.delete(img);
 
         trucks_img = []
         
-        btn.place(x=0, y=0)        
+               
         active = []
         x_scale = (float(args["bbox_nw_lat"]) - float(args["bbox_se_lat"])) / float(args["image_height"])
         y_scale = (float(args["bbox_se_lng"]) - float(args["bbox_nw_lng"])) / float(args["image_width"])
