@@ -3,6 +3,8 @@ from tkinter import *
 from PIL import Image,ImageTk
 from utils import args
 from api import pris
+import threading
+from time import sleep
 
 args = args.parse("config.dat")
 
@@ -10,21 +12,89 @@ equipment = pris.get_equipment(args["base_url"], args["equipment_active_list"])
 print(equipment)
 positions = pris.get_coordinates(args["base_url"], args["function"])
 print(positions)
+
+# No GPS signal
+def NoGPS():
+    pass
+
+def update_ui(win):
+    canvas= Canvas(win, width=1280, height=1280)
+    canvas.pack()
+    #Load an image in the script
+    map = ImageTk.PhotoImage(Image.open(args["map"]))
+    truck = ImageTk.PhotoImage(Image.open(args["truck_image"]).convert("RGBA").resize((40,40), Image.ANTIALIAS))
+
+    #Add image to the Canvas Items
+    canvas.create_image(0,0,anchor=NW,image=map)
+    
+    # Get GPS positions of the trucks
+    trucks_img = []
+
+    no_gps = []
+    
+    while True:
+        positions = pris.get_coordinates(args["base_url"], args["function"], simulate = bool(args["simulation"]), equipment = equipment)
+
+        #canvas.delete("all")
+        #Create a canvas and button
+        btn = Button(canvas, text='No GPS',
+                    bd='1', command=win.destroy)
+        for img in trucks_img:
+            canvas.delete(img);
+
+        trucks_img = []
+        
+        btn.place(x=0, y=0)        
+        active = []
+        x_scale = (float(args["bbox_nw_lat"]) - float(args["bbox_se_lat"])) / float(args["image_height"])
+        y_scale = (float(args["bbox_se_lng"]) - float(args["bbox_nw_lng"])) / float(args["image_width"])
+        
+        print("Max diff x: " + str(float(args["bbox_se_lng"]) -float(args["bbox_nw_lng"])))
+        print("Max diff y: " + str(float(args["bbox_nw_lat"]) -float(args["bbox_se_lat"])))
+
+        print("X scale: " + str(x_scale))
+        print("Y scale: " + str(y_scale))
+        
+        no_gps.clear()
+
+        for p in positions:
+            found = False
+            for eq in equipment:
+                if p["code"] == eq["code"]:
+                    ann = eq["description"]
+                    if len(p["positions"]) == 0:
+                        continue
+                    found = True
+                    y = (p["positions"][0]["y"] - float(args["bbox_nw_lng"])) / y_scale
+                    x = (float(args["bbox_nw_lat"]) - p["positions"][0]["x"]) / x_scale
+                    print("Difference x: " + str((p["positions"][0]["y"] - float(args["bbox_nw_lng"]))))
+                    print("Difference y: " + str((float(args["bbox_nw_lat"]) - p["positions"][0]["x"])))
+                    active.append({
+                        "desc": ann,
+                        "x": x,
+                        "y": y
+                    })
+                    break;
+            if not found:
+                no_gps.append(eq["description"])
+            
+        print(active)
+        for point in active:
+            print("Drawing an image @ (" + str(point["x"]) + ", " + str(point["x"]) + ")")
+            id = canvas.create_text(point["x"] - 20, point["y"] - 20, text=point["desc"], fill="white", font=('Helvetica 15 bold'))
+            trucks_img.append(id)
+            id = canvas.create_image(point["x"], point["y"], anchor=NW, image=truck)
+            trucks_img.append(id)
+        sleep(int(args["update_interval"]))
+
 #Create an instance of tkinter frame
 win = Tk()
 
 #Set the geometry of tkinter frame
 win.geometry("1280x1280")
 
-#Create a canvas
-canvas= Canvas(win, width=1280, height=1280)
-canvas.pack()
-
-#Load an image in the script
-img= ImageTk.PhotoImage(Image.open(args["map"]))
-
-#Add image to the Canvas Items
-canvas.create_image(10,10,anchor=NW,image=img)
+main_thread = threading.Thread(target=update_ui, args=(win,))
+main_thread.start()
 
 win.mainloop()
 
