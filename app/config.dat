@@ -1,12 +1,13 @@
-bbox_nw_lat:64.6236669186783
-bbox_nw_lng:41.37364971875
-bbox_se_lat:64.52933708132171
-bbox_se_lng:41.59337628125
-map:./resources/muruntau.png
-base_url:http://localhost/PRIS/
-use_auth:false
-username:pris
-password:123
-image_width:1280
-image_height:1280
-
+bbox_nw_lat#64.6236669186783
+bbox_nw_lng#41.37364971875
+bbox_se_lat#64.52933708132171
+bbox_se_lng#41.59337628125
+map#./resources/muruntau.png
+base_url#http://192.168.1.101/pris2/
+equipment_active_list#Самосвалы ОГР
+function#HAULING
+use_auth#false
+username#pris
+password#123
+image_width#1280
+image_height#1280
