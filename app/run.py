@@ -13,9 +13,16 @@ print(equipment)
 positions = pris.get_coordinates(args["base_url"], args["function"])
 print(positions)
 
+no_gps = []
+
 # No GPS signal
 def NoGPS():
-    pass
+    fd = open("equipment_with_no_gps_signla.txt", "w")
+    fd.write("EQUIPMENT WITH NO GPS SIGNAL:\n")
+    for ie in no_gps:
+        fd.write(ie);
+        fd.write("\n")
+    fd.close()
 
 def update_ui(win):
     canvas= Canvas(win, width=1280, height=1280)
@@ -30,15 +37,17 @@ def update_ui(win):
     # Get GPS positions of the trucks
     trucks_img = []
 
-    no_gps = []
+    
     
     while True:
-        positions = pris.get_coordinates(args["base_url"], args["function"], simulate = bool(args["simulation"]), equipment = equipment)
+        #positions = pris.get_coordinates(args["base_url"], args["function"], simulate = bool(args["simulation"]), equipment = equipment)
+
+        positions = pris.get_coordinates(args["base_url"], args["function"])
 
         #canvas.delete("all")
         #Create a canvas and button
         btn = Button(canvas, text='No GPS',
-                    bd='1', command=win.destroy)
+                    bd='1', command=NoGPS)
         for img in trucks_img:
             canvas.delete(img);
 
@@ -54,8 +63,6 @@ def update_ui(win):
 
         print("X scale: " + str(x_scale))
         print("Y scale: " + str(y_scale))
-        
-        no_gps.clear()
 
         for p in positions:
             found = False
@@ -65,6 +72,8 @@ def update_ui(win):
                     if len(p["positions"]) == 0:
                         continue
                     found = True
+                    if eq["description"] in no_gps:
+                        no_gps.remove(eq["description"])
                     y = (p["positions"][0]["y"] - float(args["bbox_nw_lng"])) / y_scale
                     x = (float(args["bbox_nw_lat"]) - p["positions"][0]["x"]) / x_scale
                     print("Difference x: " + str((p["positions"][0]["y"] - float(args["bbox_nw_lng"]))))

@@ -13,4 +13,4 @@ password#123
 image_width#1280
 image_height#1280
 update_interval#5
-simulation#True
+simulation#False
