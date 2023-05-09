@@ -32,6 +32,11 @@ def update_ui(win):
     truck = ImageTk.PhotoImage(Image.open(args["truck_image"]).convert("RGBA").resize((40,40), Image.ANTIALIAS))
 
     #Add image to the Canvas Items
+    # X - the horizontal direction
+    # Y - is the vertical direction
+    # (x, y) top left corner is (0,0)
+    # latitude is the horizontal lines
+    # longitude is the vertical lines
     canvas.create_image(0,0,anchor=NW,image=map)
 
     btn = Button(canvas, text='No GPS',
@@ -58,8 +63,8 @@ def update_ui(win):
         
                
         active = []
-        x_scale = (float(args["bbox_nw_lat"]) - float(args["bbox_se_lat"])) / float(args["image_height"])
-        y_scale = (float(args["bbox_se_lng"]) - float(args["bbox_nw_lng"])) / float(args["image_width"])
+        y_scale = (float(args["bbox_nw_lat"]) - float(args["bbox_se_lat"])) / float(args["image_height"])
+        x_scale = (float(args["bbox_se_lng"]) - float(args["bbox_nw_lng"])) / float(args["image_width"])
         
         print("Max diff x: " + str(float(args["bbox_se_lng"]) -float(args["bbox_nw_lng"])))
         print("Max diff y: " + str(float(args["bbox_nw_lat"]) -float(args["bbox_se_lat"])))
@@ -77,8 +82,8 @@ def update_ui(win):
                     found = True
                     if eq["description"] in no_gps:
                         no_gps.remove(eq["description"])
-                    y = (p["positions"][0]["y"] - float(args["bbox_nw_lng"])) / y_scale
-                    x = (float(args["bbox_nw_lat"]) - p["positions"][0]["x"]) / x_scale
+                    y = (float(args["bbox_nw_lat"] - p["positions"][0]["y"])) / y_scale
+                    x = (p["positions"][0]["x"] - float(args["bbox_nw_lng"])) / x_scale
                     print("Difference x: " + str((p["positions"][0]["y"] - float(args["bbox_nw_lng"]))))
                     print("Difference y: " + str((float(args["bbox_nw_lat"]) - p["positions"][0]["x"])))
                     active.append({
