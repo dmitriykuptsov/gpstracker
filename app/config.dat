@@ -1,9 +1,9 @@
-bbox_nw_lat#64.6236669186783
-bbox_nw_lng#41.37364971875
-bbox_se_lat#64.52933708132171
-bbox_se_lng#41.59337628125
+bbox_nw_lat#64.636402
+bbox_nw_lng#41.448598
+bbox_se_lat#64.501910
+bbox_se_lng#41.513259
 map#./resources/muruntau.png
-base_url#http://192.168.1.101/pris2/
+base_url#http://192.168.0.103/pris2/
 equipment_active_list#Самосвалы ОГР
 truck_image#./resources/truck.png
 function#HAULING

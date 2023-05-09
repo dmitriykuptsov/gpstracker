@@ -7,7 +7,7 @@ from datetime import datetime
 def auth(base_url, username, password):
 	return None
 
-def send_random_coordinates(base_url, min_x = 64.540093, max_x = 64.608378, max_y = 41.499359, min_y = 41.447125, equipment = []):
+def send_random_coordinates(base_url, min_x = 41.448598, max_x = 41.513259, max_y = 64.636402, min_y = 64.501910, equipment = []):
 	now = datetime.now().isoformat();
 	for eq in equipment:
 		x = random.uniform(min_x, max_x)
@@ -34,7 +34,7 @@ def get_equipment(base_url, activelist):
 	response = json.loads(response.content.decode("utf-8"))
 	return response["activeList"]
 
-def get_coordinates(base_url, function, simulate = False, min_x = 64.540093, max_x = 64.608378, max_y = 41.499359, min_y = 41.447125, equipment = []):
+def get_coordinates(base_url, function, simulate = False, min_x = 64.540093, max_x = 64.608378, min_y = 41.447125, max_y = 41.499359, equipment = []):
 	if not simulate:
 		url = base_url + "/v1/equipment/positions?functions=" + function + "&max-positions=1"
 		response = requests.get(url)

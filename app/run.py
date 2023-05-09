@@ -59,12 +59,11 @@ def update_ui(win):
         for img in trucks_img:
             canvas.delete(img);
 
-        trucks_img = []
-        
-               
+        trucks_img = []       
         active = []
+
         y_scale = (float(args["bbox_nw_lat"]) - float(args["bbox_se_lat"])) / float(args["image_height"])
-        x_scale = (float(args["bbox_se_lng"]) - float(args["bbox_nw_lng"])) / float(args["image_width"])
+        x_scale = (float(args["bbox_se_lng"]) - float(args["bbox_nw_lng"]))  / float(args["image_width"])
         
         print("Max diff x: " + str(float(args["bbox_se_lng"]) -float(args["bbox_nw_lng"])))
         print("Max diff y: " + str(float(args["bbox_nw_lat"]) -float(args["bbox_se_lat"])))
@@ -72,20 +71,24 @@ def update_ui(win):
         print("X scale: " + str(x_scale))
         print("Y scale: " + str(y_scale))
 
+        print("----------------------------------")
         for p in positions:
             found = False
             for eq in equipment:
                 if p["code"] == eq["code"]:
+                    
                     ann = eq["description"]
                     if len(p["positions"]) == 0:
                         continue
                     found = True
                     if eq["description"] in no_gps:
                         no_gps.remove(eq["description"])
-                    y = (float(args["bbox_nw_lat"] - p["positions"][0]["y"])) / y_scale
-                    x = (p["positions"][0]["x"] - float(args["bbox_nw_lng"])) / x_scale
-                    print("Difference x: " + str((p["positions"][0]["y"] - float(args["bbox_nw_lng"]))))
-                    print("Difference y: " + str((float(args["bbox_nw_lat"]) - p["positions"][0]["x"])))
+                    print(str(p["positions"][0]["x"]) + ", " + str(p["positions"][0]["y"]))
+                    y = (float(args["bbox_nw_lat"]) - float(p["positions"][0]["y"])) / y_scale
+                    x = (float(p["positions"][0]["x"]) - float(args["bbox_nw_lng"])) / x_scale
+                    #print("Difference x: " + str((p["positions"][0]["y"] - float(args["bbox_nw_lng"]))))
+                    #print("Difference y: " + str((float(args["bbox_nw_lat"]) - p["positions"][0]["x"])))
+
                     active.append({
                         "desc": ann,
                         "x": x,
@@ -94,11 +97,11 @@ def update_ui(win):
                     break;
             if not found:
                 no_gps.append(eq["description"])
-            
+        print("----------------------------------")  
         print(active)
         for point in active:
             print("Drawing an image @ (" + str(point["x"]) + ", " + str(point["x"]) + ")")
-            id = canvas.create_text(point["x"] - 20, point["y"] - 20, text=point["desc"], fill="white", font=('Helvetica 15 bold'))
+            id = canvas.create_text(point["x"] - 20, point["y"] - 20, text=point["desc"], fill="white", font=('Helvetica 12 bold'))
             trucks_img.append(id)
             id = canvas.create_image(point["x"], point["y"], anchor=NW, image=truck)
             trucks_img.append(id)
